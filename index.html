@@ -13,7 +13,10 @@
 		  <button @click="showScene('main')">tampilkan main</button>
 		  <button @click="showScene('surface')">tampilkan surface</button>
 	  		<a-scene v-if="show === 'main'">
-				<a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+	  			<a-assets>
+	  				<a-asset-item id="crust" src="model/terrain_001/scene.gltf"></a-asset-item>
+	  			</a-assets>
+				<a-gltf-model src = "#crust"></a-gltf-model>
 			</a-scene>
 	  		<a-scene v-if="show === 'surface'">
 				<a-box position="-1 0.5 -3" rotation="0 45 0" color="red"></a-box>
