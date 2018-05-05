@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+	<head>
+	  	<meta charset="utf-8">
+	  	<title>Bumi</title>
+	  	
+	  	<script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	  	<script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js"></script>
+	  	<script src="js/aframe.propagate.js"></script>
+	  	<script type="text/javascript">
+    	AFRAME.registerComponent('main-ui', {
+      	schema: {
+        	events: {type: 'string', default: ''},
+      	},
+      	init: function ()
+      	{
+          	var viewButton = document.querySelector('#center-tile-cta')
+            
+          	var mainCamera = document.querySelector('#main-camera')
+          	var mainBg = document.querySelector('#main-bg')
+          	var tiles = document.querySelectorAll('.tile')
+
+          	viewButton.addEventListener('click', function (e) {
+              console.log('clicked ; ', e)
+              document.href = document.origin + '/surface.html'
+
+            	// Tell the camera to start its animation forward
+            	mainCamera.emit('viewDetail')
+            
+            	// Wait till the last millisecond to swap the background
+            	// and make it brighter.
+            	// Finally hide the tiles.
+            	setTimeout(function()
+            	{
+                	mainBg.setAttribute('material', 'src', '#center-tile-image')
+           
+                	mainBg.setAttribute('material', 'color', '#fff');
+                	mainBg.setAttribute('rotation', { x: 0, y: -90, z: 0 });
+                	hideTiles()
+            	}, 999)
+
+            	function hideTiles () 
+            	{
+              	for (var i = 0; i< tiles.length; i++) {
+                	tiles[i].setAttribute('visible', false)
+              	}
+            	}
+          	})
+      	}
+    	});
+    	</script>
+
+	  	
+
+	</head>
+	<body>
+
+	
+		
+		<a-scene main-ui>
+      	<a-entity id="main-camera" camera look-controls 
+                	animation="property: position; dir: normal; dur: 1000;
+                       	easing: easeInOutQuad; loop: false; from: 0 0 0; to: 0 0 -8;
+                       	startEvents: viewDetail;">
+        	<a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable"></a-entity>
+      	</a-entity>
+
+			
+
+			<a-assets>
+
+				<img id="start-bg" src="images/page360.jpg">
+				<img id="left-tile-image" src="images/crust.jpg">
+				<img id="center-tile-image" src="images/mantle.jpg">
+				<img id="right-tile-image" src="images/lava.jpg">
+				<a-mixin id="overlay-fade-in" animation="property: opacity; dir: normal; dur: 500; easing: easeOutQuad; loop: false; from:0; to: .75; startEvents: clickDown;"></a-mixin>
+
+
+
+				<!--<a-asset-item id="crust" src="model/terrain_001/scene.gltf">-->
+				<!--<a-asset-item id="mantle" src="model/lava_flow/scene.gltf">
+				<a-asset-item id="core" src="model/lava_core/scene.gltf">-->
+				<!--<a-asset-item id="earth" src="model/earth/scene.gltf">-->
+			
+
+			</a-assets>
+
+      <!--<a-entity id="scene-crust" position -->
+      <!--<a-gltf-model src = "#crust"></a-gltf-model>-->
+      <!--<a-gltf-model src = "#mantle"></a-gltf-model>-->
+      <!--<a-gltf-model src = "#core"></a-gltf-model>-->
+      <!--<a-gltf-model src = "#earth"></a-gltf-model>-->
+			
+			<a-gltf-model link="href: surface.html; on: click; visualAspectEnabled: false"></a-gltf-model>
+
+			<!--<a-image src="logo.png" width="6" height="2" rotation="30 0 0" position="0 6 -4" scale="1 1 1"></a-image>-->
+
+			<a-sphere id="main-bg" radius="100" position="0 0 0" rotation="0 90 0" src="#start-bg" color="#333333" material="side: double;"></a-sphere>
+
+			<a-plane propagate="events:clickDown" id="left-tile" class="clickable" position="-4.5 1 -8" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;"> 
+				<a-image 
+        		id="left-tile" 
+        		class="tile"
+        		position="0 0 0" 
+        		src="#left-tile-image"
+        		width="4"
+        		height="3"
+        		opacity="0"
+        		animation="property: opacity; dir: normal; dur: 1500;
+                   				easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1000"></a-image>
+        <a-plane id="left-tile-overlay" width="4" height="3" position="0 0 0.01" color="#000" opacity="0"
+              mixin="overlay-fade-in">
+        </a-plane>
+        <a-text id="left-tile-text" position="0 .25 .02" align="center" line-height="64" opacity="0" value="Kerak Bumi"
+   						mixin="overlay-fade-in">
+        </a-text>
+      	<a-plane id="left-tile-cta" width="2" height=".5" position="0 -.75 .01" color="#000" opacity="0" mixin="overlay-fade-in">
+            <a-text id="left-tile-cta-text" position="0 0 .02" align="center" line-height="64" opacity="0" value="Mulai" mixin="overlay-fade-in">
+            </a-text>    
+        </a-plane>
+      </a-plane>
+
+
+			<a-plane propagate="events:clickDown" id="center-tile" class="clickable" position="0 1 -8" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;"> 
+      			<a-image 
+  				    id="center-tile" 
+  				    class="tile" 
+  				    position="0 0 0" 
+  				    src="#center-tile-image" 
+  				    width="4"
+  				    height="3"
+  				    opacity="0"
+  				    animation="property: opacity; dir: normal; dur: 1500;
+            	 				easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1250;"></a-image>
+            <a-plane id="center-tile-overlay" width="4" height="3" position="0 0 0.01" color="#000" opacity="0"
+                 		mixin="overlay-fade-in"></a-plane>
+        		<a-text id="center-tile-text" position="0 .25 .02" align="center" line-height="64" opacity="0" value="Mantel Bumi"
+   						      mixin="overlay-fade-in"></a-text>
+      			<a-plane id="center-tile-cta" width="2" height=".5" position="0 -.75 .01" color="#000" opacity="0"
+                 		mixin="overlay-fade-in">
+          			<a-text id="center-tile-cta-text" position="0 0 .02" align="center" line-height="64" opacity="0" value="Mulai"
+                 		mixin="overlay-fade-in"></a-text>    
+        		</a-plane>
+      </a-plane>
+
+
+        <a-plane propagate="events:clickDown" id="right-tile" class="clickable" position="4.5 1 -8" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;"> 
+				    <a-image
+  				    id="right-tile" 
+  				    class="tile" 
+  				    position="0 0 0" 
+  				    src="#right-tile-image" 
+  				    width="4"
+  				    height="3"
+  				    opacity="0"
+  				    animation="property: opacity; dir: normal; dur: 1500;
+             					easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1500;"></a-image>
+            <a-plane id="right-tile-overlay" width="4" height="3" position="0 0 0.01" color="#000" opacity="0"
+                 		mixin="overlay-fade-in">
+            </a-plane>
+        		<a-text id="right-tile-text" position="0 .25 .02" align="center" line-height="64" opacity="0" value="Inti Bumi"
+   						      mixin="overlay-fade-in"></a-text>
+      			<a-plane id="right-tile-cta" width="2" height=".5" position="0 -.75 .01" color="#000" opacity="0"
+                 		mixin="overlay-fade-in">
+          			<a-text id="right-tile-cta-text" position="0 0 .02" align="center" line-height="64" opacity="0" value="Mulai"
+                 		mixin="overlay-fade-in"></a-text>    
+        		</a-plane>
+        </a-plane>
+
+
+
+
+			
+			
+			
+	
+		</a-scene>
+
+		
+
+		
+		
+	</body>
