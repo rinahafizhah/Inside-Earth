@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+	<head>
+	  	<meta charset="utf-8">
+	  	<title>Bumi</title>
+	  	
+	  	<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+      	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	  
+	  </head>
+	<body>
+		<div id="app">
+		  {{ message }}
+		  <button @click="showScene('main')">tampilkan main</button>
+		  <button @click="showScene('surface')">tampilkan surface</button>
+	  		<a-scene v-if="show === 'main'">
+				<a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+			</a-scene>
+	  		<a-scene v-if="show === 'surface'">
+				<a-box position="-1 0.5 -3" rotation="0 45 0" color="red"></a-box>
+			</a-scene>
+		</div>
+
+		<script type="text/javascript">
+			var app = new Vue({
+			  el: '#app',
+			  data: {
+			    message: 'Hello Vue!',
+			    show: '',
+			  },
+			  methods: {
+			  	showScene(sceneName) {
+			  		this.show = sceneName;
+			  	}
+			  }
+			})
+		</script>
+	</body>
+</html>
+
+
+			
+			
+			
+	
+		
