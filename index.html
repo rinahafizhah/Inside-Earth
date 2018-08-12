@@ -1,427 +1,401 @@
+
+
 <!DOCTYPE html>
-	<head>
-	  	<meta charset="utf-8">
-	  	<title>Inside Earth</title>
-	  	
-	  	<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-		<script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js"></script>
-		<script src="js/aframe.propagate.js"></script>
-		<script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.1/dist/aframe-extras.min.js"></script>  
-		<script src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.2/dist/aframe-dialog-popup-component.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="css/app.css">
-	  </head>
-	<body>
-		<div id="app">
-			<router-link :to="{ name: 'home' }">Home</router-link>
-			<router-link :to="{ name: 'projects-page' }">Project</router-link>
-			<hr>
-			<transition name="page" mode="out-in">
-				<router-view></router-view>
-			</transition>
-		</div>
+<head>
+  <meta charset="utf-8">
+  <title>Inside Earth</title>
+  <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js"></script>
+  <script src="js/aframe.propagate.js"></script>
+  <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.1/dist/aframe-extras.min.js"></script>  
+  <script src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.2/dist/aframe-dialog-popup-component.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/app.css">
+</head>
+<body>
+  <div id="app">
+    <router-link :to="{ name: 'home' }">Home</router-link>
+    <router-link :to="{ name: 'projects' }">Project</router-link>
+    <hr>
+    <transition name="page" mode="out-in">
+      <router-view></router-view>
+    </transition>
+  </div>
+  <template id="home-page">
+    <div>
+      <a-scene>
+        <a-entity id="main-camera" camera look-controls 
+          animation="property: position; dir: normal; dur: 1000;
+          easing: easeInOutQuad; loop: false; from: 0 0 0; to: 0 0 -8;
+          startEvents: viewDetail;">
+          <a-cursor scale ="2 2 2" color="#ffff33" cursor="fuse: true; maxDistance: 120; timeout: 100"></a-cursor>
+          <a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable"></a-entity>
+        </a-entity>
+        <a-assets>
+          <img id="start-bg" src="images/page360.jpg">
+          <img id="left-tile-image" src="images/crust.jpg">
+          <img id="center-tile-image" src="images/mantle.jpg">
+          <img id="right-tile-image" src="images/lava.jpg">
+          <img id="kembali" src="images/kembali.png">
+          <img id="mulai" src="images/mulai.png">
+          <img id="tentang" src="images/tentang.png">
+          <img id="logo" src="images/logo.png">
+          <img id="cara" src="images/cara.png">
+          <img id="info" src="images/info.png">
+          <img id="close" src="images/close.png">
+          <img id="bg_core" src="images/lavacloud.jpg">
+          <img id="bg_crust" src="images/skycrust.jpg">
+          <img id="bg_mantle" src="images/crust.jpg">
+          <a-mixin id="overlay-fade-in" 
+            animation="property: opacity; dir: normal; dur: 500; easing: easeOutQuad; loop: false; from:0; to: .75; startEvents: clickDown;"></a-mixin>
+        </a-assets>
+        <a-sphere id="main-bg" radius="100" position="0 0 0" rotation="0 90 0" src="#start-bg" color="#333333" material="side: double;"></a-sphere>
+        <a-plane
+					propagate="events:clickDown" 
+          id="left-tile" 
+          class="clickable" 
+          position="-4.5 1 -8" width="4" height="3" opacity="0" 
+          animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
+          <a-image 
+            id="left-tile" 
+            class="tile"
+            position="0 0 0" 
+            src="#left-tile-image"
+            width="4"
+            height="3"
+            opacity="0"
+            animation="property: opacity; dir: normal; dur: 1500;
+            easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1000">
+          </a-image>
+          <a-plane
+            id="left-tile-overlay" 
+            width="4" 
+            height="3" 
+            position="0 0 0.01" 
+            color="#000" 
+            opacity="0"
+            mixin="overlay-fade-in">			
+          </a-plane>
+          <a-text
+            id="left-tile-text" 
+            position="0 .25 .02" 
+            align="center" 
+            line-height="64" 
+            opacity="0" 
+            value="Kerak Bumi"
+            mixin="overlay-fade-in">
+          </a-text>
+        </a-plane>
+        <a-plane
+          propagate="events:clickDown" 
+          id="center-tile" 
+          class="clickable" 
+					position="0 1 -8" 
+					cursor-listener
+					name="mantle"
+          width="4" height="3" opacity="0" 
+          animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
+          <a-image
+            id="center-tile" 
+            class="tile" 
+            position="0 0 0" 
+            src="#center-tile-image" 
+            width="4"
+            height="3"
+            opacity="0"
+            animation="property: opacity; dir: normal; dur: 1500;
+            easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1250;">
+          </a-image>
+          <a-plane
+            id="center-tile-overlay" 
+            width="4" 
+            height="3" 
+            position="0 0 0.01" 
+            color="#000" 
+            opacity="0"
+            mixin="overlay-fade-in">
+          </a-plane>
+          <a-text
+            id="center-tile-text" 
+            position="0 .25 .02" 
+            align="center" 
+            line-height="64" 
+            opacity="0" 
+            value="Mantel Bumi"
+            mixin="overlay-fade-in">
+          </a-text>
+        </a-plane>
+        <a-plane
+          propagate="events:clickDown" 
+          id="right-tile" 
+          class="clickable" 
+          position="4.5 1 -8" width="4" height="3" opacity="0" 
+          animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
+          <a-image
+            id="right-tile" 
+            class="tile" 
+            position="0 0 0" 
+            src="#right-tile-image" 
+            width="4"
+            height="3"
+            opacity="0"
+            animation="property: opacity; dir: normal; dur: 1500;
+            easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1500;">
+          </a-image>
+          <a-plane
+            id="right-tile-overlay" 
+            width="4" 
+            height="3" 
+            position="0 0 0.01" 
+            color="#000" 
+            opacity="0"
+            mixin="overlay-fade-in">
+          </a-plane>
+          <a-text
+            id="right-tile-text" 
+            position="0 .25 .02" 
+            align="center" 
+            line-height="64" 
+            opacity="0" 
+            value="Inti Bumi"
+            mixin="overlay-fade-in">
+          </a-text>
+        </a-plane>
+      </a-scene>
+    </div>
+  </template>
+  <template id="projects-page">
+    <div>
+      <button @click="showScene('crust')">tampilkan kerak bumi</button>
+      <button @click="showScene('mantle')">tampilkan mantel bumi</button>
+      <button @click="showScene('core')">tampilkan inti bumi</button>
+      <a-scene v-if="show === 'crust'">
+        <a-assets>
+          <img id="bg_crust" src="images/skycrust.jpg">
+          <a-asset-item id="crust" src="model/terrain_001/scene.gltf"></a-asset-item>
+        </a-assets>
+        <a-gltf-model src = "#crust"></a-gltf-model>
+        <a-sky src="#bg_crust"></a-sky>
+        <a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
+        <a-entity
+          id="dialog"
+          position="0 1.8 -2"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Kerak Bumi adalah lapisan terluar Bumi yang terbagi menjadi 2 kategori, yaitu kerak samudera dan kerak benua. Kita akan menjelajahi kerak benua.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="3 1.8 -2"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Kerak benua mempunyai ketebalan sekitar 20-70 km. Batuan penyusun kerak benua yang utama adalah granit, yang tidak sepadat batuan basalt.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="-3 1.8 -2"
+          rotation="0 45 0"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Temperatur Kerak Bumi sekitar 200°C - 400°C. Temperatur meningkat 30°C setiap km. Pada batas terbawahnya mencapai 1.100°C.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="-4 1.8 -1"
+          rotation="0 90 0"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Unsur-unsur kimia utama pembentuk kerak bumi : Oksigen (O) (46,6%), Silikon (Si) (27,7%), Aluminium (Al) (8,1%), Besi (Fe) (5,0%), Kalsium (Ca) (3,6%), Natrium (Na) (2,8%), Kalium (K) (2,6%), Magnesium (Mg) (2,1%).;
+          ">
+        </a-entity>
+      </a-scene>
+      <a-scene v-if="show === 'mantle'">
+        <a-assets>
+          <img id="bg_mantle" src="images/crust.jpg">
+          <a-asset-item id="mantle" src="model/grand_canyon/scene.gltf"></a-asset-item>
+        </a-assets>
+        <a-gltf-model src = "#mantle" position="25.349 -1.084 0" scale="2 2 2"></a-gltf-model>
+        <a-sky src="#bg_mantle"></a-sky>
+        <a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
+        <a-entity
+          id="dialog"
+          position="0.5 1.5 -2"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Mantel Bumi adalah lapisan yang menyelubungi inti Bumi & merupakan bagian terbesar dari bagian Bumi sekitar 2/3 massa Bumi.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="3 1.5 -2"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Kedalaman mantel bumi sekitar 2.900 km. Mantel atas Bumi dapat dibagi menjadi dua, astenosfer dengan kedalaman 20 km dan litosfer dengan kedalaman antara 50-120 km.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="-2 1.7 -2"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Mantel terdiri dari batu peridotit yang kaya zat besi dan magnesium. Batu menjadi lebih padat semakin mendekati inti Bumi.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="-3.5 1.5 -1"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Temperatur mantel bumi yang berbatasan dengan kerak sekitar 500-900°C, sedangkan di dekat inti mencapai 4000°C.;
+          ">
+        </a-entity>
+      </a-scene>
+      <a-scene v-if="show === 'core'">
+        <a-assets>
+          <img id="bg_core" src="images/lavacloud.jpg">
+        </a-assets>
+        <a-ocean rotation="-90 0 0" color="#cc4422" depth="100" width="100" density="20" 
+          opacity="0.8" metalness="0" roughness="1" speed="4"></a-ocean>
+        <a-sky src="#bg_core"></a-sky>
+        <a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
+        <a-entity
+          id="dialog"
+          position="0 1.5 -2"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Inti Bumi merupakan lapisan terdalam Bumi. Terletak mulai kedalaman 2900 km. Inti Bumi dapat dibagi menjadi 2, inti bumi bagian luar dan bagian dalam.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="-3 1.5 -2"
+          rotation="0 90 0"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Inti bumi bagian luar tersusun dari material besi cair, sedangkan inti dalam Bumi terdiri dari campuran besi - nikel yang berbentuk bola padat.;
+          ">
+        </a-entity>
+        <a-entity
+          id="dialog"
+          position="-2 1.5 -2"
+          dialog-popup="
+          openIconImage: images/info.jpg;
+          closeIconImage: images/close.jpg;
+          dialogBoxHeight: 2.5;
+          title: Info!;
+          body: Suhu pada inti dalam Bumi diperkirakan sama dengan suhu permukaan Matahari, sekitar 5.700 Kelvin (5.430°C).;
+          ">
+        </a-entity>
+      </a-scene>
+      <hr>
+    </div>
+  </template>
+	<script type="text/javascript">
 
-		<template id="home-page">
-			<div>
-				<a-scene>
-					<a-entity id="main-camera" camera look-controls 
-					animation="property: position; dir: normal; dur: 1000;
-						easing: easeInOutQuad; loop: false; from: 0 0 0; to: 0 0 -8;
-						startEvents: viewDetail;">
-						<a-cursor scale ="2 2 2" color="#ffff33" cursor="fuse: true; maxDistance: 120; timeout: 100"></a-cursor>
-						<a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable"></a-entity>
-					</a-entity>
-
-				
-					<a-assets>
-						<img id="start-bg" src="images/page360.jpg">
-						<img id="left-tile-image" src="images/crust.jpg">
-						<img id="center-tile-image" src="images/mantle.jpg">
-						<img id="right-tile-image" src="images/lava.jpg">
-						<img id="kembali" src="images/kembali.png">
-						<img id="mulai" src="images/mulai.png">
-						<img id="tentang" src="images/tentang.png">
-						<img id="logo" src="images/logo.png">
-						<img id="cara" src="images/cara.png">
-						<img id="info" src="images/info.png">
-						<img id="close" src="images/close.png">
-						<img id="bg_core" src="images/lavacloud.jpg">
-						<img id="bg_crust" src="images/skycrust.jpg">
-						<img id="bg_mantle" src="images/crust.jpg">
-						<a-mixin id="overlay-fade-in" 
-							animation="property: opacity; dir: normal; dur: 500; easing: easeOutQuad; loop: false; from:0; to: .75; startEvents: clickDown;"></a-mixin>
-					</a-assets>
-
-					<a-sphere id="main-bg" radius="100" position="0 0 0" rotation="0 90 0" src="#start-bg" color="#333333" material="side: double;"></a-sphere>
-
-					<a-plane
-							propagate="events:clickDown" 
-							id="left-tile" 
-							class="clickable" 
-							position="-4.5 1 -8" width="4" height="3" opacity="0" 
-							animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;"> 
-
-							<a-image 
-								id="left-tile" 
-								class="tile"
-								position="0 0 0" 
-								src="#left-tile-image"
-								width="4"
-								height="3"
-								opacity="0"
-								animation="property: opacity; dir: normal; dur: 1500;
-										easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1000">
-							</a-image>
-							
-							<a-plane
-									id="left-tile-overlay" 
-									width="4" 
-									height="3" 
-									position="0 0 0.01" 
-									color="#000" 
-									opacity="0"
-									mixin="overlay-fade-in">			
-							</a-plane>
-							
-							<a-text
-									id="left-tile-text" 
-									position="0 .25 .02" 
-									align="center" 
-									line-height="64" 
-									opacity="0" 
-									value="Kerak Bumi"
-									mixin="overlay-fade-in">
-							</a-text>
-
-							
-
-					
-					</a-plane>
-
-					<a-plane
-							propagate="events:clickDown" 
-							id="center-tile" 
-							class="clickable" 
-							position="0 1 -8" 
-							width="4" height="3" opacity="0" 
-							animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;"> 
-
-							<a-image
-									id="center-tile" 
-									class="tile" 
-									position="0 0 0" 
-									src="#center-tile-image" 
-									width="4"
-									height="3"
-									opacity="0"
-									animation="property: opacity; dir: normal; dur: 1500;
-													easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1250;">
-							</a-image>
-
-							<a-plane
-									id="center-tile-overlay" 
-									width="4" 
-									height="3" 
-									position="0 0 0.01" 
-									color="#000" 
-									opacity="0"
-									mixin="overlay-fade-in">
-							</a-plane>
-
-							<a-text
-									id="center-tile-text" 
-									position="0 .25 .02" 
-									align="center" 
-									line-height="64" 
-									opacity="0" 
-									value="Mantel Bumi"
-									mixin="overlay-fade-in">
-							</a-text>
-
-							
-					</a-plane>
-						
-					<a-plane
-							propagate="events:clickDown" 
-							id="right-tile" 
-							class="clickable" 
-							position="4.5 1 -8" width="4" height="3" opacity="0" 
-							animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;"> 
-
-							<a-image
-									id="right-tile" 
-									class="tile" 
-									position="0 0 0" 
-									src="#right-tile-image" 
-									width="4"
-									height="3"
-									opacity="0"
-									animation="property: opacity; dir: normal; dur: 1500;
-													easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1500;">
-							</a-image>
-
-							<a-plane
-									id="right-tile-overlay" 
-									width="4" 
-									height="3" 
-									position="0 0 0.01" 
-									color="#000" 
-									opacity="0"
-									mixin="overlay-fade-in">
-							</a-plane>
-
-							<a-text
-									id="right-tile-text" 
-									position="0 .25 .02" 
-									align="center" 
-									line-height="64" 
-									opacity="0" 
-									value="Inti Bumi"
-									mixin="overlay-fade-in">
-						</a-text>		
-					</a-plane>
-				</a-scene>		
-			</div>
-		</template>
-
-
-
-		<template id="projects-page">
-			<div>
-				<button @click="showScene('crust')">tampilkan kerak bumi</button>
-				<button @click="showScene('mantle')">tampilkan mantel bumi</button>
-				<button @click="showScene('core')">tampilkan inti bumi</button>
-
-				<a-scene v-if="show === 'crust'">
-					
-					<a-assets>
-						<img id="bg_crust" src="images/skycrust.jpg">
-						<a-asset-item id="crust" src="model/terrain_001/scene.gltf"></a-asset-item>
-					</a-assets>
-					<a-gltf-model src = "#crust"></a-gltf-model>
-
-					<a-sky src="#bg_crust"></a-sky>
-					
-					<a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
-					<a-entity
-						id="dialog"
-						position="0 1.8 -2"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Kerak Bumi adalah lapisan terluar Bumi yang terbagi menjadi 2 kategori, yaitu kerak samudera dan kerak benua. Kita akan menjelajahi kerak benua.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="3 1.8 -2"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Kerak benua mempunyai ketebalan sekitar 20-70 km. Batuan penyusun kerak benua yang utama adalah granit, yang tidak sepadat batuan basalt.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="-3 1.8 -2"
-						rotation="0 45 0"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Temperatur Kerak Bumi sekitar 200°C - 400°C. Temperatur meningkat 30°C setiap km. Pada batas terbawahnya mencapai 1.100°C.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="-4 1.8 -1"
-						rotation="0 90 0"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Unsur-unsur kimia utama pembentuk kerak bumi : Oksigen (O) (46,6%), Silikon (Si) (27,7%), Aluminium (Al) (8,1%), Besi (Fe) (5,0%), Kalsium (Ca) (3,6%), Natrium (Na) (2,8%), Kalium (K) (2,6%), Magnesium (Mg) (2,1%).;
-						">
-					</a-entity>
-				</a-scene>
-
-				<a-scene v-if="show === 'mantle'">
-						
-					<a-assets>
-						<img id="bg_mantle" src="images/crust.jpg">
-						<a-asset-item id="mantle" src="model/grand_canyon/scene.gltf"></a-asset-item>
-					</a-assets>
-					<a-gltf-model src = "#mantle" position="25.349 -1.084 0" scale="2 2 2"></a-gltf-model>
-
-					<a-sky src="#bg_mantle"></a-sky>
-
-					<a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
-					<a-entity
-						id="dialog"
-						position="0.5 1.5 -2"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Mantel Bumi adalah lapisan yang menyelubungi inti Bumi & merupakan bagian terbesar dari bagian Bumi sekitar 2/3 massa Bumi.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="3 1.5 -2"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Kedalaman mantel bumi sekitar 2.900 km. Mantel atas Bumi dapat dibagi menjadi dua, astenosfer dengan kedalaman 20 km dan litosfer dengan kedalaman antara 50-120 km.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="-2 1.7 -2"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Mantel terdiri dari batu peridotit yang kaya zat besi dan magnesium. Batu menjadi lebih padat semakin mendekati inti Bumi.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="-3.5 1.5 -1"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Temperatur mantel bumi yang berbatasan dengan kerak sekitar 500-900°C, sedangkan di dekat inti mencapai 4000°C.;
-						">
-					</a-entity>
-				</a-scene>
-
-				<a-scene v-if="show === 'core'">
-					<a-assets>
-						<img id="bg_core" src="images/lavacloud.jpg">
-					</a-assets>
-					<a-ocean rotation="-90 0 0" color="#cc4422" depth="100" width="100" density="20" 
-					opacity="0.8" metalness="0" roughness="1" speed="4"></a-ocean>
-
-					<a-sky src="#bg_core"></a-sky>
-
-					<a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
-					<a-entity
-						id="dialog"
-						position="0 1.5 -2"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Inti Bumi merupakan lapisan terdalam Bumi. Terletak mulai kedalaman 2900 km. Inti Bumi dapat dibagi menjadi 2, inti bumi bagian luar dan bagian dalam.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="-3 1.5 -2"
-						rotation="0 90 0"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Inti bumi bagian luar tersusun dari material besi cair, sedangkan inti dalam Bumi terdiri dari campuran besi - nikel yang berbentuk bola padat.;
-						">
-					</a-entity>
-
-					<a-entity
-						id="dialog"
-						position="-2 1.5 -2"
-						dialog-popup="
-						openIconImage: images/info.jpg;
-						closeIconImage: images/close.jpg;
-						dialogBoxHeight: 2.5;
-						title: Info!;
-						body: Suhu pada inti dalam Bumi diperkirakan sama dengan suhu permukaan Matahari, sekitar 5.700 Kelvin (5.430°C).;
-						">
-					</a-entity>
-				</a-scene>
-
-				<hr>
-				<transition name="page" mode="out-in">
-				  <router-view></router-view>
-				</transition> 
-			</div>
-		</template>
-
-
-		<script type="text/javascript">
-		
-		Vue.use(VueRouter)
-
-		const HomePage = Vue.component('home-page',{
-			template: '#home-page'
-		})
-
-		const ProjectPage = Vue.component('projects-page',{
-			template: '#projects-page'
-		})
-
-		const routes = [
-			{
-			path: '/',
-			name: 'home',
-			component: HomePage
-			},
-			{
-			path: '/projects',
-			name: 'projects',
-			component: ProjectsPage
+    Vue.use(VueRouter)
+    
+    const HomePage = Vue.component('home-page',{
+    	template: '#home-page'
+    })
+    
+    const ProjectPage = Vue.component('projects-page',{
+    	template: '#projects-page',
+    	data: function () {
+    		return {
+    			show: ''
+    		}
+    	},
+    	methods: {
+    		showScene(sceneName) {
+    			this.show = sceneName
+    		}
+    	},
+			mounted(){
+				console.log('param na', this.$route)
+				this.show = this.$route.params.name
 			}
-		]
+    })
+    
+    const routes = [
+    	{
+    	path: '/',
+    	name: 'home',
+    	component: HomePage
+    	},
+    	{
+    	path: '/projects',
+    	name: 'projects',
+    	component: ProjectPage
+    	}
+    ]
+    
+    const router = new VueRouter ({
+    	routes
+    })
+    
+    Vue.config.ignoredElements = [
+        'a-scene',
+        'a-entity',
+        'a-camera',
+        'a-box',
+    	'a-cursor',
+    	'a-assets',
+    	'a-mixin',
+    	'a-sphere',
+    	'a-plane',
+    	'a-text',
+    	'a-image',
+      ]
+    
+    	var app = new Vue({
+    	  el: '#app',
+    		router,
+    	})
 
-		const router = new VueRouter ({
-			routes
-		})
 
-
-			var app = new Vue({
-			  el: '#app',
-			  data: function() {
-			    router
-			    
-			  },
-			  methods: {
-			  	showScene(sceneName) {
-			  		this.show = sceneName;
-				  }
-				
-				
-			  }
-			})
-		</script>
-	</body>
+	AFRAME.registerComponent('cursor-listener', {
+  init: function () {
+    this.el.addEventListener('click', function (evt) {
+      console.log('I was clicked at: ', evt);
+			app.$router.push({ name: 'projects', params: { name: this.getAttribute('name')}})
+    });
+  }
+});
+  </script>
+</body>
 </html>
 
-
-			
-			
-			
-	
-		
