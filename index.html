@@ -12,15 +12,48 @@
   <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.1/dist/aframe-extras.min.js"></script>  
   <script src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.2/dist/aframe-dialog-popup-component.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/app.css">
+  <link href="http://fonts.googleapis.com/css?family=Kotta+One|Cantarell:400,700" rel="stylesheet" type="text/css">
+  <style scoped>
+    
+    
+    #app {
+      text-align: center;
+      font: 18px/23px "Cantarell", sans-serif;
+      font-size: 40px;
+      line-height: 50px;
+      font-weight: 400;
+      margin-top: 20px;
+      color: #efecec;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+    
+  
+  
+  </style>
 </head>
 <body>
   <div id="app">
-    <router-link :to="{ name: 'home' }">Home</router-link>
-    <router-link :to="{ name: 'projects' }">Project</router-link>
-    <hr>
-    <transition name="page" mode="out-in">
-      <router-view></router-view>
-    </transition>
+  
+    <header>
+      <h1>Inside Earth</h1>
+    </header>
+
+
+      <router-link :to="{ name: 'home' }">Home</router-link>
+      <router-link :to="{ name: 'projects' }">Project</router-link>
+      <hr>
+      <transition name="page" mode="out-in"></transition>
+        <router-view></router-view>
+      </transition>
+    
+    
   </div>
   <template id="home-page">
     <div>
