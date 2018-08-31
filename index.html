@@ -11,6 +11,8 @@
     <script src="js/aframe.propagate.js"></script>
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.2/dist/aframe-dialog-popup-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/app.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
@@ -124,7 +126,7 @@
 <body>
     <div id="app">
         <header style="background: #222">
-            <router-link to="/" exact>Index</router-link>
+            <router-link to="/" exact>About</router-link>
             <router-link to="/home">Home</router-link>
             <router-link to="/projects">Project</router-link>
         </header>
@@ -133,7 +135,7 @@
         </transition>
     </div>
 
-    <template id="index">
+    <template id="about">
         <div>
             <section id="hero1" class="hero">
                 <div class="inner">
@@ -189,9 +191,9 @@
                     <a-mixin id="overlay-fade-in" animation="property: opacity; dir: normal; dur: 500; easing: easeOutQuad; loop: false; from:0; to: .75; startEvents: clickDown;"></a-mixin>
                 </a-assets>
 
-                <a-sphere id="main-bg" radius="100" position="0 0 0" rotation="0 90 0" src="#start-bg" color="#333333" material="side: double;"></a-sphere>
+                <a-sphere id="main-bg" radius="100" position="0 0 0" rotation="0 90 0" src="#start-bg" color="#333333" material="side: double;" ></a-sphere>
 
-                <a-plane propagate="events:clickDown" id="left-tile" class="clickable" position="-4.5 1 -8" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
+                <a-plane propagate="events:clickDown" id="left-tile" class="clickable" @click="showScene('crust')" position="-4.5 1 -8" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
                     <a-image id="left-tile" class="tile" position="0 0 0" src="#left-tile-image" width="4" height="3" opacity="0" animation="property: opacity; dir: normal; dur: 1500;
             easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1000">
                     </a-image>
@@ -199,6 +201,11 @@
                     </a-plane>
                     <a-text id="left-tile-text" position="0 .25 .02" align="center" line-height="64" opacity="0" value="Kerak Bumi" mixin="overlay-fade-in">
                     </a-text>
+                    <a-plane id="center-tile-cta" width="2" height=".5" position="0 -.75 .01" color="#000" opacity="0"
+                                mixin="overlay-fade-in">
+                        <a-text id="center-tile-cta-text" position="0 0 .02" align="center" line-height="64" opacity="0" value="View"
+                                mixin="overlay-fade-in"></a-text>    
+                    </a-plane>
                 </a-plane>
 
                 <a-plane propagate="events:clickDown" id="center-tile" class="clickable" position="0 1 -8" cursor-listener name="mantle" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
@@ -227,9 +234,13 @@
 
     <template id="projects-page">
         <div>
-            <button class="btn btn-primary" @click="showScene('crust')">tampilkan kerak bumi</button>
-            <button class="btn btn-primary" @click="showScene('mantle')">tampilkan mantel bumi</button>
-            <button class="btn btn-primary" @click="showScene('core')">tampilkan inti bumi</button>
+            <v-container fill-height>
+                <v-layout align-center justify-center>
+                    <v-btn outline color="#ffffff" @click="showScene('crust')">Tampilkan Kerak Bumi</v-btn>
+                    <v-btn outline color="#ffffff" @click="showScene('mantle')">Tampilkan Mantel Bumi</v-btn>
+                    <v-btn outline color="#ffffff" @click="showScene('core')">Tampilkan Inti Bumi</v-btn>
+                </v-layout>
+            </v-container>
 
             <a-scene v-if="show === 'crust'">
 
@@ -392,8 +403,8 @@
             }
         })
 
-        const IndexPage = Vue.component('index', {
-            template: '#index'
+        const AboutPage = Vue.component('about', {
+            template: '#about'
         })
 
         const HomePage = Vue.component('home-page', {
@@ -410,6 +421,9 @@
             methods: {
                 showScene(sceneName) {
                     this.show = sceneName
+                },
+                navigate() {
+                    router.go(-1);
                 }
             },
             mounted() {
@@ -420,8 +434,8 @@
 
         const routes = [{
                 path: '/',
-                name: 'index',
-                component: IndexPage
+                name: 'about',
+                component: AboutPage
             },
             {
                 path: '/home',
@@ -482,14 +496,14 @@
             }
         }).$mount(app);
 
-        // 	AFRAME.registerComponent('cursor-listener', {
-        //   init: function () {
-        //     this.el.addEventListener('click', function (evt) {
-        //       console.log('I was clicked at: ', evt);
-        // 			app.$router.push({ name: 'projects', params: { name: this.getAttribute('name')}})
-        //     });
-        //   }
-        // });
+        	AFRAME.registerComponent('cursor-listener', {
+          init: function () {
+            this.el.addEventListener('click', function (evt) {
+              console.log('I was clicked at: ', evt);
+        			app.$router.push({ name: 'projects', params: { name: this.getAttribute('name')}})
+            });
+          }
+        });
 
         //document.querySelector('#linkkembali').addEventListener('click', function () {
         //document.querySelector('#camera').emit('kembalilink');
