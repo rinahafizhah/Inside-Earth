@@ -9,6 +9,7 @@
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js"></script>
     <script src="js/aframe.propagate.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script> 
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.2/dist/aframe-dialog-popup-component.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
@@ -289,9 +290,10 @@
                 </a-entity>
 
                 <a-entity id="linkkembali">
-                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1">
-                        <a-event name="mouseenter" src="#kembali" scale="1 0.5 0.5"></a-event>
-                        <a-event name="mouseleave" src="#kembali" scale="1 0.5 0.5"></a-event>
+                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1"
+                    event-set__enter="_event: mouseenter; _target: #projects-page; visible: true"
+                    event-set__leave="_event: mouseleave; _target: #projects-page; visible: false">
+                        
                     </a-image>
                 </a-entity>
             </a-scene>
@@ -496,14 +498,14 @@
             }
         }).$mount(app);
 
-        	AFRAME.registerComponent('cursor-listener', {
-          init: function () {
-            this.el.addEventListener('click', function (evt) {
-              console.log('I was clicked at: ', evt);
-        			app.$router.push({ name: 'projects', params: { name: this.getAttribute('name')}})
-            });
-          }
-        });
+        // AFRAME.registerComponent('cursor-listener', {
+        //   init: function () {
+        //     this.el.addEventListener('click', function (evt) {
+        //       console.log('I was clicked at: ', evt);
+        // 			app.$router.push({ name: 'projects', params: { name: this.getAttribute('name')}})
+        //     });
+        //   }
+        // });
 
         //document.querySelector('#linkkembali').addEventListener('click', function () {
         //document.querySelector('#camera').emit('kembalilink');
