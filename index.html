@@ -296,6 +296,7 @@
                         
                     </a-image>
                 </a-entity>
+                <a-text @click="showScene('mantle')" value="Menuju Mantel Bumi" geometry="primitive:plane"  scale="1 0.5 0.5" rotation="0 45 0" position="-2.5 3.5 -3" opacity="1"></a-text>
             </a-scene>
 
             <a-scene v-if="show === 'mantle'">
@@ -482,6 +483,11 @@
             'a-plane',
             'a-text',
             'a-image',
+            'a-gltf-model',
+            'a-sky',
+            'a-animation',
+            'a-event',
+            'a-asset-item',
         ]
 
         var app = new Vue({
