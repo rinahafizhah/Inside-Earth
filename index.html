@@ -289,7 +289,7 @@
           ">
                 </a-entity>
 
-                <a-entity id="linkkembali">
+                <a-entity @click="backToMainMenu">
                     <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1"
                     event-set__enter="_event: mouseenter; _target: #projects-page; visible: true"
                     event-set__leave="_event: mouseleave; _target: #projects-page; visible: false">
@@ -339,7 +339,7 @@
           body: Temperatur mantel bumi yang berbatasan dengan kerak sekitar 500-900°C, sedangkan di dekat inti mencapai 4000°C.;
           ">
                 </a-entity>
-                <a-entity id="linkkembali">
+                <a-entity @click="backToMainMenu">
                     <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1">
                         <a-event name="mouseenter" src="#kembali" scale="1 0.5 0.5"></a-event>
                         <a-event name="mouseleave" src="#kembali" scale="1 0.5 0.5"></a-event>
@@ -379,7 +379,7 @@
           body: Suhu pada inti dalam Bumi diperkirakan sama dengan suhu permukaan Matahari, sekitar 5.700 Kelvin (5.430°C).;
           ">
                 </a-entity>
-                <a-entity id="linkkembali">
+                <a-entity @click="backToMainMenu">
                     <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1">
                         <a-event name="mouseenter" src="#kembali" scale="1 0.5 0.5"></a-event>
                         <a-event name="mouseleave" src="#kembali" scale="1 0.5 0.5"></a-event>
@@ -426,7 +426,10 @@
                 },
                 navigate() {
                     router.go(-1);
-                }
+                },
+                backToMainMenu() {
+                    this.show = '';
+                },
             },
             mounted() {
                 console.log('param na', this.$route)
