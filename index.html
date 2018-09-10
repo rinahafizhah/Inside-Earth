@@ -8,7 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js"></script>
-    <script src="js/aframe.propagate.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.5.1/dist/aframe-look-at-component.min.js"></script>
+    <script src="main.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script> 
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/@editvr/aframe-dialog-popup-component@1.7.2/dist/aframe-dialog-popup-component.min.js"></script>
@@ -170,14 +171,21 @@
 
     <template id="home-page">
         <div>
-            <a-scene>
-                <a-entity id="main-camera" camera look-controls animation="property: position; dir: normal; dur: 1000;
-          easing: easeInOutQuad; loop: false; from: 0 0 0; to: 0 0 -8;
-          startEvents: viewDetail;">
-                    <a-cursor scale="2 2 2" color="#ffff33" cursor="fuse: true; maxDistance: 120; timeout: 100"></a-cursor>
-                    <a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable"></a-entity>
+            <a-scene image-grid>
+                <a-entity id="main-camera-wrapper" position="0.12 4.14 4.93" rotation="0 -0.35 0"
+                animation="property: position; easing: easeOutQuad; startEvents: imageClicked;">
+                    <a-camera id="main-camera" user-height="0" visible="true" wasd-controls="enabled: false;"
+                                cursor="rayOrigin: mouse;" raycaster="objects: .clickable">
+                        <a-cursor id="fuse-cursor" fuse="true" geometry="radiusInner: 0.02; radiusOuter: 0.03; thetaLength: 360; thetaStart: 90;"
+                                color="#232323" opacity="1" repeat="1 1" shader="flat" position="0 0 -1" objects=".clickable"
+                                rotation="0 0 0" scale="1 1 1" visible="true"></a-cursor>
+                        <a-ring id="fuse-progress" radius-inner="0.02" radius-outer="0.03" theta-length="360"
+                                theta-start="90" color="#FFE066" opacity="0" repeat="1 1" shader="flat" position="0 0 -0.999"
+                                rotation="0 0 0" scale="1 1 1" visible="true" class="clickable" animation="delay: 0; dir: normal; dur: 1500; easing: linear; loop: 0; property: geometry.thetaLength; startEvents: fusing; to: 0; from: 360;"
+                                animation__1="delay: 0; dir: normal; dur: 500; easing: linear; loop: 0; property: opacity; startEvents: fusing; to: 1; from: 0;"></a-ring>
+                    </a-camera>
                 </a-entity>
-
+                
                 <a-assets>
                     <img id="start-bg" src="images/page360.jpg">
                     <img id="left-tile-image" src="images/crust.jpg">
@@ -186,52 +194,49 @@
                     <img id="kembali" src="images/kembali.png">
                     <img id="info" src="images/info.png">
                     <img id="close" src="images/close.png">
-                    <img id="bg_core" src="images/lavacloud.jpg">
-                    <img id="bg_crust" src="images/skycrust.jpg">
-                    <img id="bg_mantle" src="images/crust.jpg">
+                    <video id="vid_intro" autoplay loop="true" src="video/intro.mp4"></video>
+                   
                     <a-mixin id="overlay-fade-in" animation="property: opacity; dir: normal; dur: 500; easing: easeOutQuad; loop: false; from:0; to: .75; startEvents: clickDown;"></a-mixin>
                 </a-assets>
 
+                <a-video class="clickable" src="#vid_intro" width="16" height="9" shader="flat" side="front" position="-20 2.20 -2.00" rotation="0 0 0"></a-video>
+
                 <a-sphere id="main-bg" radius="100" position="0 0 0" rotation="0 90 0" src="#start-bg" color="#333333" material="side: double;" ></a-sphere>
 
-                <a-plane propagate="events:clickDown" id="left-tile" class="clickable" @click="showScene('crust')" position="-4.5 1 -8" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
-                    <a-image id="left-tile" class="tile" position="0 0 0" src="#left-tile-image" width="4" height="3" opacity="0" animation="property: opacity; dir: normal; dur: 1500;
-            easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1000">
-                    </a-image>
-                    <a-plane id="left-tile-overlay" width="4" height="3" position="0 0 0.01" color="#000" opacity="0" mixin="overlay-fade-in">
-                    </a-plane>
-                    <a-text id="left-tile-text" position="0 .25 .02" align="center" line-height="64" opacity="0" value="Kerak Bumi" mixin="overlay-fade-in">
-                    </a-text>
-                    <a-plane id="center-tile-cta" width="2" height=".5" position="0 -.75 .01" color="#000" opacity="0"
-                                mixin="overlay-fade-in">
-                        <a-text id="center-tile-cta-text" position="0 0 .02" align="center" line-height="64" opacity="0" value="View"
-                                mixin="overlay-fade-in"></a-text>    
-                    </a-plane>
-                </a-plane>
+                <a-text id="headline" position="0.00 4.75 -0.3" rotation="0 0 0" scale="2 2 2"
+                value="Lapisan Bumi" font="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.fnt?1506384504220" font-image="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.png?1506384504242" align="center" opacity="1"
+                color="#FFE066" wrap-count="36" letter-spacing="16.20" line-height="64" width="4.00"
+                height="0" side="double" anchor="center" visible="true"></a-text>
 
-                <a-plane propagate="events:clickDown" id="center-tile" class="clickable" position="0 1 -8" cursor-listener name="mantle" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
-                    <a-image id="center-tile" class="tile" position="0 0 0" src="#center-tile-image" width="4" height="3" opacity="0" animation="property: opacity; dir: normal; dur: 1500;
-            easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1250;">
-                    </a-image>
-                    <a-plane id="center-tile-overlay" width="4" height="3" position="0 0 0.01" color="#000" opacity="0" mixin="overlay-fade-in">
-                    </a-plane>
-                    <a-text id="center-tile-text" position="0 .25 .02" align="center" line-height="64" opacity="0" value="Mantel Bumi" mixin="overlay-fade-in">
-                    </a-text>
-                </a-plane>
+                <a-image id="mantel" class="clickable" position="0.00 2.20 -2.00" rotation="0 0 0" scale="1 1 1"
+                width="4" height="3" color="#ffffff" opacity="1" shader="flat" side="double" src="#center-tile-image"
+                metalness="0.5" roughness="1" repeat="1 1" visible="true"></a-image>
 
-                <a-plane propagate="events:clickDown" id="right-tile" class="clickable" position="4.5 1 -8" width="4" height="3" opacity="0" animation="property: scale; dir: normal; dur: 750; easing: easeOutElastic; loop: false; from: 1 1 1; to: 1.5 1.5 1.5; startEvents: click;">
-                    <a-image id="right-tile" class="tile" position="0 0 0" src="#right-tile-image" width="4" height="3" opacity="0" animation="property: opacity; dir: normal; dur: 1500;
-            easing: easeOutQuad; loop: false; from:0; to: 1; delay: 1500;">
-                    </a-image>
-                    <a-plane id="right-tile-overlay" width="4" height="3" position="0 0 0.01" color="#000" opacity="0" mixin="overlay-fade-in">
-                    </a-plane>
-                    <a-text id="right-tile-text" position="0 .25 .02" align="center" line-height="64" opacity="0" value="Inti Bumi" mixin="overlay-fade-in">
-                    </a-text>
-                </a-plane>
+                <a-text id="mantel-caption" position="0.00 1.90 -0.30" rotation="0 0 0" scale="1 1 1"
+                value="MANTEL BUMI" font="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.fnt?1506384504220" font-image="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.png?1506384504242" align="center" opacity="1"
+                color="#232323" wrap-count="36" letter-spacing="16.20" line-height="64" width="4.00"
+                height="0" side="double" anchor="center" visible="true"></a-text>
+
+                <a-image id="kerak" class="clickable" position="-5.40 2.20 -2.00" rotation="0.00 0 0.00"
+                scale="1 1 1" width="3" height="4" shader="flat" side="double"
+                src="#left-tile-image" metalness="0.5" roughness="1" repeat="1 1" visible="true"></a-image>
+
+                <a-text id="kerak-caption" position="-5.4 1.90 -0.30" rotation="0 0 0" scale="1 1 1"
+                value="KERAK BUMI" font="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.fnt?1506384504220" font-image="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.png?1506384504242" align="center" opacity="1" color="#232323"
+                wrap-count="36" letter-spacing="16.20" line-height="64" width="4.00" height="0" side="double"
+                anchor="center" visible="true"></a-text>
+                
+                <a-image id="inti" class="clickable" position="5.50 1.51 -2.00" rotation="0 0 0" scale="1 1 1"
+                width="3" height="4" color="#ffffff" opacity="1" shader="flat" side="double" src="#right-tile-image"
+                metalness="0.5" roughness="1" repeat="1 1" visible="true"></a-image>
+                
+                <a-text id="inti-caption" position="5.3 1.90 -0.30" rotation="0 0 0"
+                scale="1 1 1" value="INTI BUMI" font="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.fnt?1506384504220" font-image="https://cdn.glitch.com/13258c51-0acc-4d99-ab9f-85f8eec172c6%2FOswald-Bold.png?1506384504242" align="center"
+                opacity="1" color="#232323" wrap-count="36" letter-spacing="16.20" line-height="64"
+                width="4.00" height="0" side="double" anchor="center" visible="true"></a-text>
             </a-scene>
         </div>
     </template>
-
 
     <template id="projects-page">
         <div>
@@ -244,56 +249,53 @@
             </v-container>
 
             <a-scene v-if="show === 'crust'">
-
                 <a-assets>
                     <img id="bg_crust" src="images/skycrust.jpg">
                     <img id="kembali" src="images/kembali.png">
                     <a-asset-item id="crust" src="model/terrain_001/scene.gltf"></a-asset-item>
                 </a-assets>
+
                 <a-gltf-model src="#crust"></a-gltf-model>
-
                 <a-sky src="#bg_crust"></a-sky>
-
-                <a-animation attribute="position" begin="kembalilink" to="" easing="ease-in" dur="2000"></a-animation>
+            
                 <a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
+
                 <a-entity id="dialog" position="0 1.8 -2" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Kerak Bumi adalah lapisan terluar Bumi yang terbagi menjadi 2 kategori, yaitu kerak samudera dan kerak benua. Kita akan menjelajahi kerak benua.;
-          ">
-                </a-entity>
-                <a-entity id="dialog" position="3 1.8 -2" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Kerak benua mempunyai ketebalan sekitar 20-70 km. Batuan penyusun kerak benua yang utama adalah granit, yang tidak sepadat batuan basalt.;
-          ">
-                </a-entity>
-                <a-entity id="dialog" position="-3 1.8 -2" rotation="0 45 0" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Temperatur Kerak Bumi sekitar 200°C - 400°C. Temperatur meningkat 30°C setiap km. Pada batas terbawahnya mencapai 1.100°C.;
-          ">
-                </a-entity>
-                <a-entity id="dialog" position="-4 1.8 -1" rotation="0 90 0" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Unsur-unsur kimia utama pembentuk kerak bumi : Oksigen (O) (46,6%), Silikon (Si) (27,7%), Aluminium (Al) (8,1%), Besi (Fe) (5,0%), Kalsium (Ca) (3,6%), Natrium (Na) (2,8%), Kalium (K) (2,6%), Magnesium (Mg) (2,1%).;
-          ">
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Kerak Bumi adalah lapisan terluar Bumi yang terbagi menjadi 2 kategori, yaitu kerak samudera dan kerak benua. Kita akan menjelajahi kerak benua.;">
                 </a-entity>
 
-                <a-entity id="linkkembali">
-                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1"
+                <a-entity id="dialog" position="3 1.8 -2" dialog-popup="
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Kerak benua mempunyai ketebalan sekitar 20-70 km. Batuan penyusun kerak benua yang utama adalah granit, yang tidak sepadat batuan basalt.;">
+                </a-entity>
+
+                <a-entity id="dialog" position="-3 1.8 -2" rotation="0 45 0" dialog-popup="
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Temperatur Kerak Bumi sekitar 200°C - 400°C. Temperatur meningkat 30°C setiap km. Pada batas terbawahnya mencapai 1.100°C.;">
+                </a-entity>
+
+                <a-entity id="dialog" position="-4 1.8 -1" rotation="0 90 0" dialog-popup="
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Unsur-unsur kimia utama pembentuk kerak bumi : Oksigen (O) (46,6%), Silikon (Si) (27,7%), Aluminium (Al) (8,1%), Besi (Fe) (5,0%), Kalsium (Ca) (3,6%), Natrium (Na) (2,8%), Kalium (K) (2,6%), Magnesium (Mg) (2,1%).;">
+                </a-entity>
+
+                <a-entity @click="backToMainMenu">
+                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4 3 -3" opacity="1"
                     event-set__enter="_event: mouseenter; _target: #projects-page; visible: true"
-                    event-set__leave="_event: mouseleave; _target: #projects-page; visible: false">
-                        
+                    event-set__leave="_event: mouseleave; _target: #projects-page; visible: false">   
                     </a-image>
                 </a-entity>
             </a-scene>
@@ -304,43 +306,46 @@
                     <img id="kembali" src="images/kembali.png">
                     <a-asset-item id="mantle" src="model/grand_canyon/scene.gltf"></a-asset-item>
                 </a-assets>
+
                 <a-gltf-model src="#mantle" position="25.349 -1.084 0" scale="2 2 2"></a-gltf-model>
                 <a-sky src="#bg_mantle"></a-sky>
+
                 <a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
+                
                 <a-entity id="dialog" position="0.5 1.5 -2" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Mantel Bumi adalah lapisan yang menyelubungi inti Bumi & merupakan bagian terbesar dari bagian Bumi sekitar 2/3 massa Bumi.;
-          ">
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Mantel Bumi adalah lapisan yang menyelubungi inti Bumi & merupakan bagian terbesar dari bagian Bumi sekitar 2/3 massa Bumi.;">
                 </a-entity>
+                
                 <a-entity id="dialog" position="3 1.5 -2" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Kedalaman mantel bumi sekitar 2.900 km. Mantel atas Bumi dapat dibagi menjadi dua, astenosfer dengan kedalaman 20 km dan litosfer dengan kedalaman antara 50-120 km.;
-          ">
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Kedalaman mantel bumi sekitar 2.900 km. Mantel atas Bumi dapat dibagi menjadi dua, astenosfer dengan kedalaman 20 km dan litosfer dengan kedalaman antara 50-120 km.;">
                 </a-entity>
+
                 <a-entity id="dialog" position="-2 1.7 -2" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Mantel terdiri dari batu peridotit yang kaya zat besi dan magnesium. Batu menjadi lebih padat semakin mendekati inti Bumi.;
-          ">
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Mantel terdiri dari batu peridotit yang kaya zat besi dan magnesium. Batu menjadi lebih padat semakin mendekati inti Bumi.;">
                 </a-entity>
+
                 <a-entity id="dialog" position="-3.5 1.5 -1" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Temperatur mantel bumi yang berbatasan dengan kerak sekitar 500-900°C, sedangkan di dekat inti mencapai 4000°C.;
-          ">
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Temperatur mantel bumi yang berbatasan dengan kerak sekitar 500-900°C, sedangkan di dekat inti mencapai 4000°C.;">
                 </a-entity>
-                <a-entity id="linkkembali">
-                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1">
+
+                <a-entity @click="backToMainMenu">
+                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-3.13 0.84 -2.55" opacity="1">
                         <a-event name="mouseenter" src="#kembali" scale="1 0.5 0.5"></a-event>
                         <a-event name="mouseleave" src="#kembali" scale="1 0.5 0.5"></a-event>
                     </a-image>
@@ -352,35 +357,38 @@
                     <img id="bg_core" src="images/lavacloud.jpg">
                     <img id="kembali" src="images/kembali.png">
                 </a-assets>
+
                 <a-ocean rotation="-90 0 0" color="#cc4422" depth="100" width="100" density="20" opacity="0.8" metalness="0" roughness="1" speed="4"></a-ocean>
                 <a-sky src="#bg_core"></a-sky>
+
                 <a-camera id="camera" look-controls="enabled: true" position="0 1.6 0" wasd-controls-enabled="false" cursor="rayOrigin: mouse"></a-camera>
+
                 <a-entity id="dialog" position="0 1.5 -2" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Inti Bumi merupakan lapisan terdalam Bumi. Terletak mulai kedalaman 2900 km. Inti Bumi dapat dibagi menjadi 2, inti bumi bagian luar dan bagian dalam.;
-          ">
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Inti Bumi merupakan lapisan terdalam Bumi. Terletak mulai kedalaman 2900 km. Inti Bumi dapat dibagi menjadi 2, inti bumi bagian luar dan bagian dalam.;">
                 </a-entity>
+
                 <a-entity id="dialog" position="-3 1.5 -2" rotation="0 90 0" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Inti bumi bagian luar tersusun dari material besi cair, sedangkan inti dalam Bumi terdiri dari campuran besi - nikel yang berbentuk bola padat.;
-          ">
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Inti bumi bagian luar tersusun dari material besi cair, sedangkan inti dalam Bumi terdiri dari campuran besi - nikel yang berbentuk bola padat.;">
                 </a-entity>
-                <a-entity id="dialog" position="-2 1.5 -2" dialog-popup="
-          openIconImage: images/info.jpg;
-          closeIconImage: images/close.jpg;
-          dialogBoxHeight: 2.5;
-          title: Info!;
-          body: Suhu pada inti dalam Bumi diperkirakan sama dengan suhu permukaan Matahari, sekitar 5.700 Kelvin (5.430°C).;
-          ">
+
+                <a-entity id="dialog" position="-2.5 1.5 -2" dialog-popup="
+                openIconImage: images/info.jpg;
+                closeIconImage: images/close.jpg;
+                dialogBoxHeight: 2.5;
+                title: Info!;
+                body: Suhu pada inti dalam Bumi diperkirakan sama dengan suhu permukaan Matahari, sekitar 5.700 Kelvin (5.430°C).;">
                 </a-entity>
-                <a-entity id="linkkembali">
-                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4.5 3.5 -3" opacity="1">
+                
+                <a-entity @click="backToMainMenu">
+                    <a-image id="kembali" src="#kembali" scale="1 0.5 0.5" rotation="0 45 0" position="-4 0.64 -3" opacity="1">
                         <a-event name="mouseenter" src="#kembali" scale="1 0.5 0.5"></a-event>
                         <a-event name="mouseleave" src="#kembali" scale="1 0.5 0.5"></a-event>
                     </a-image>
@@ -426,7 +434,10 @@
                 },
                 navigate() {
                     router.go(-1);
-                }
+                },
+                backToMainMenu() {
+                    this.show = '';
+                },
             },
             mounted() {
                 console.log('param na', this.$route)
@@ -479,6 +490,11 @@
             'a-plane',
             'a-text',
             'a-image',
+            'a-gltf-model',
+            'a-sky',
+            'a-animation',
+            'a-event',
+            'a-asset-item',
         ]
 
         var app = new Vue({
@@ -497,19 +513,46 @@
                 }
             }
         }).$mount(app);
+        
+        AFRAME.registerComponent('image-grid', {
+        schema: {},
+        init: function () {
+            var fuse = document.querySelector('#fuse-cursor');
+            var fuseProgress = document.querySelector('#fuse-progress');
+            var camera = document.querySelector('#main-camera-wrapper');
+            var images = document.querySelectorAll('a-image');
+            var videos = document.querySelectorAll('a-video');
+            var CAMERA_Z = 2.7;
 
-        // AFRAME.registerComponent('cursor-listener', {
-        //   init: function () {
-        //     this.el.addEventListener('click', function (evt) {
-        //       console.log('I was clicked at: ', evt);
-        // 			app.$router.push({ name: 'projects', params: { name: this.getAttribute('name')}})
-        //     });
-        //   }
-        // });
+            fuse.addEventListener('fusing', function (e) {
+                fuseProgress.emit('fusing');
+            });
 
-        //document.querySelector('#linkkembali').addEventListener('click', function () {
-        //document.querySelector('#camera').emit('kembalilink');
-        //});
+            images.forEach(function(image) {
+            image.setAttribute('look-at', '[camera]');
+
+            image.addEventListener('click', function(e) {
+                var position = this.getAttribute('position')
+                camera.setAttribute('animation', {
+                to: {x: position.x, y: position.y, z: CAMERA_Z}
+                })
+                camera.emit('imageClicked')
+            })
+            })
+
+            videos.forEach(function(video) {
+            video.setAttribute('look-at', '[camera]');
+
+            video.addEventListener('click', function(e) {
+                var position = this.getAttribute('position')
+                camera.setAttribute('animation', {
+                to: {x: position.x, y: position.y, z: CAMERA_Z}
+                })
+                camera.emit('imageClicked')
+            })
+            })
+        }
+        });
     </script>
 </body>
 
