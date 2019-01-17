@@ -5,8 +5,6 @@ Inside Earth WebVR. A 3D visualization about earth layers. Using Aframe framewor
 
 This WebVR is for my scientific research in order to complete bachelor degree Informatics Engineering.
 
-**For any uses about my project kindly reach me through email at rinahafizhah@gmail.com**
-
 ## Project Deployment 
 
 You can access [Inside Earth](https://rinahafizhah.github.io/Inside-Earth/) here.
